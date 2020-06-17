@@ -1,0 +1,34 @@
+nodes:
+  label: nodes
+  inputs:
+   - nd_shape
+   - nd_size
+   - nd_color
+   - nd_border
+   - nd_border_color
+   - nd_shadow
+   # hover, highlight 
+   - nd_lb
+   - nd_lb_color
+   - nd_lb_size
+edges:
+  label: connections
+  inputs:
+    - ed_size
+    - ed_color
+    - ed_arrows
+    - ed_smooth
+    - ed_shadow
+    - ed_lb
+    - ed_lb_color #font.color
+    - ed_lb_size
+network:
+  label: network
+  inputs:
+    - title
+    - layout #hierarquical, igraph, circle
+    #- fixed network?------------------------------
+    #- random seed
+    - drag_nodes
+    - drag_view
+    - zoom

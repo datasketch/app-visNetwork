@@ -1,0 +1,187 @@
+nd_shape:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: shape
+    choices: 
+      Dot:
+      - dot
+      Square:
+      - square
+      Diamond:
+      - diamond
+      Triangle:
+      - triangle
+      Star:
+      - star
+      Text:
+      - text
+    selected: dot
+nd_size:
+  show: true
+  input_type: sliderInput
+  input_params:
+    label: size
+    min: 0
+    max: 50
+    value: 10
+    step: 1
+nd_color:
+  show: true
+  input_type: colorPaletteInput
+  input_params:
+    label: color
+    colors: 
+      - "#97C2FC"
+nd_border:
+  show: true
+  input_type: sliderInput
+  input_params:
+    label: border
+    min: 0
+    max: 10
+    value: 1
+    step: 1
+nd_border_color:
+  show: true
+  show_if: 
+    nd_border:
+      not_equals: 0
+  input_type: colorPaletteInput
+  input_params:
+    label: border_color
+    colors: 
+      - "#2B7CE9"
+nd_shadow:
+  show: true
+  input_type: checkboxInput
+  input_params:
+    label: shadow
+nd_lb:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: lb
+    choices: cols_nd()
+nd_lb_color:
+  show: true
+  show_if:
+    nd_lb:
+      not_equals: "no"
+  input_type: colorPaletteInput
+  input_params:
+    label: lb_color
+    colors:
+    - "#343434"
+nd_lb_size:
+  show: true
+  show_if:
+    nd_lb:
+      not_equals: "no"
+  input_type: numericInput
+  input_params:
+    label: lb_size
+    min: 0
+    max: 100
+    value: 15
+    step: 1
+ed_size:
+  show: true
+  input_type: sliderInput
+  input_params:
+    label: size
+    min: 0
+    max: 30
+    value: 1
+    step: 1
+ed_color:
+  show: true
+  input_type: colorPaletteInput
+  input_params:
+    label: color
+    colors: 
+      - "#848484"    
+ed_arrows:
+  show: true
+  input_type: radioButtons
+  input_params:
+    label: ed_arrows
+    choices:
+      None:
+      - none
+      From:
+      - from
+      To:
+      - to
+      Middle:
+      - middle
+ed_smooth:
+  show: true
+  input_type: checkboxInput
+  input_params:
+    label: ed_smooth
+ed_shadow:
+  show: true
+  input_type: checkboxInput
+  input_params:
+    label: shadow
+ed_lb:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: lb
+    choices: cols_cn()
+ed_lb_color:
+  show: true
+  show_if:
+    ed_lb:
+      not_equals: "no"
+  input_type: colorPaletteInput
+  input_params:
+    label: lb_color
+    colors:
+    - "#343434"
+ed_lb_size:
+  show: true
+  show_if:
+    ed_lb:
+      not_equals: "no"
+  input_type: numericInput
+  input_params:
+    label: lb_size
+    min: 0
+    max: 100
+    value: 15
+    step: 1    
+title:
+  show: true
+  input_type: textInput
+  input_params:
+    label: title
+layout:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: layout
+    choices:
+      Hierarchical:
+      - hierarchical
+      Igraph:
+      - igraph
+      Circle:
+      - circle
+drag_nodes:
+  show: true
+  input_type: checkboxInput
+  input_params:
+    label: drag_nodes
+drag_view:
+  show: true
+  input_type: checkboxInput
+  input_params:
+    label: drag_view
+zoom:
+  show: true
+  input_type: checkboxInput
+  input_params:
+    label: zoom

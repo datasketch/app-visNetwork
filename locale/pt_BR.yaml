@@ -1,0 +1,51 @@
+upload_data: Subir dada
+dataset: Dados
+options: Opções
+viz: Rede
+sample: Dados de amostra
+sample_lb: Seleccionar dados de amostra
+sample_ch_cn_0: "data/sampleData/planetas_cn_es.csv"
+sample_ch_cn_1: "data/sampleData/ciudades_cn_es.csv"
+sample_ch_nd_0: "data/sampleData/planetas_nd_es.csv"
+sample_ch_nd_1: "data/sampleData/ciudades_nd_es.csv"
+sample_ch_nm_0: Planetas
+sample_ch_nm_1: Cidades e departamentos colombianos
+paste: Copiar e colar
+paste_pl: Copie e cole aqui
+upload: Subir CSX/XLS
+upload_lb: Escolher arquivo CSV/XLS
+upload_bt_lb: Examinar...
+upload_pl: Nenhum arquivo selecionado
+google: Google sheets
+google_sh_lb: Dados de Google sheet
+google_sh_pl: https://docs.google.com/spreadsheets/...
+google_sh_pg_lb: Folha
+download_net: Baixar rede
+connections: Conexão
+nodes: Nós
+shape: Forma
+size: Tamanho
+color: Cor
+border: Tamanho da borda
+border_color: Cor da borda
+shadow: Sombra
+lb: Coluna de rótulos
+lb_color: Cor rótulos
+lb_size: Tamanho rótulo
+ed_arrows: Setas
+ed_smooth: Linhas curvas
+title: Título
+layout: Distribuição
+hierarchical: Hierárquica
+igraph: Padrão
+circle: Circular
+drag_nodes: Arrastrar nós
+drag_view: Arrastrar visão
+zoom: Ampliação
+no_lb: Sem rótulos
+dot: Círculo
+square: Quadrado
+diamond: Diamante
+triangle: Triângulo
+star: Estrela
+text: Texto

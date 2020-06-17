@@ -1,0 +1,51 @@
+upload_data: Upload data
+dataset: Dataset
+options: Options
+viz: Network
+sample: Sample data
+sample_lb: Select a sample data
+sample_ch_cn_0: "data/sampleData/planetas_cn_es.csv"
+sample_ch_cn_1: "data/sampleData/ciudades_cn_es.csv"
+sample_ch_nd_0: "data/sampleData/planetas_nd_es.csv"
+sample_ch_nd_1: "data/sampleData/ciudades_nd_es.csv"
+sample_ch_nm_0: Planets
+sample_ch_nm_1: Cities and departments of Colombia
+paste: Copy & paste
+paste_pl: Copy and paste it here
+upload: CSV/XLS upload  
+upload_lb: Choose CSV/XLS file
+upload_bt_lb: Browse...
+upload_pl: No file selected
+google: Google sheets
+google_sh_lb: Data from Google sheet
+google_sh_pl: https://docs.google.com/spreadsheets/...
+google_sh_pg_lb: Sheet
+download_net: Download network
+connections: Connections
+nodes: Nodes
+shape: Shape
+size: Size
+color: Color
+border: Border size
+border_color: Border color
+shadow: Shadow
+lb: Labels column
+lb_color: Labels color
+lb_size: Labels size
+ed_arrows: Arrows
+ed_smooth: Smooth lines
+title: Title
+layout: Layout
+hierarchical: Hierarchical
+igraph: Standard
+circle: Circular
+drag_nodes: Drag nodes
+drag_view: Drag view
+zoom: Zoom
+no_lb: No labels
+dot: Dot
+square: Square
+diamond: Diamond
+triangle: Triangle
+star: Star
+text: Text
