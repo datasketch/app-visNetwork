@@ -24,7 +24,7 @@ nd_size:
     label: size
     min: 0
     max: 50
-    value: 10
+    value: 22
     step: 1
 nd_color:
   show: true
@@ -32,7 +32,7 @@ nd_color:
   input_params:
     label: color
     colors: 
-      - "#97C2FC"
+      - "#C3719B"
 nd_border:
   show: true
   input_type: sliderInput
@@ -51,7 +51,7 @@ nd_border_color:
   input_params:
     label: border_color
     colors: 
-      - "#2B7CE9"
+      - "#AD1472"
 nd_shadow:
   show: true
   input_type: checkboxInput
@@ -92,7 +92,7 @@ ed_size:
     label: size
     min: 0
     max: 30
-    value: 1
+    value: 3
     step: 1
 ed_color:
   show: true
@@ -100,7 +100,7 @@ ed_color:
   input_params:
     label: color
     colors: 
-      - "#848484"    
+      - "#B1CFD8"    
 ed_arrows:
   show: true
   input_type: radioButtons
@@ -108,7 +108,7 @@ ed_arrows:
     label: ed_arrows
     choices:
       None:
-      - none
+      - "NULL"
       From:
       - from
       To:
@@ -164,10 +164,10 @@ layout:
   input_params:
     label: layout
     choices:
+      Standard:
+      - igraph
       Hierarchical:
       - hierarchical
-      Igraph:
-      - igraph
       Circle:
       - circle
 drag_nodes:
@@ -175,13 +175,16 @@ drag_nodes:
   input_type: checkboxInput
   input_params:
     label: drag_nodes
+    value: true
 drag_view:
   show: true
   input_type: checkboxInput
   input_params:
     label: drag_view
+    value: true
 zoom:
   show: true
   input_type: checkboxInput
   input_params:
     label: zoom
+    value: true

@@ -4,12 +4,13 @@ options: Options
 viz: Network
 sample: Sample data
 sample_lb: Select a sample data
-sample_ch_cn_0: "data/sampleData/planetas_cn_es.csv"
-sample_ch_cn_1: "data/sampleData/ciudades_cn_es.csv"
-sample_ch_nd_0: "data/sampleData/planetas_nd_es.csv"
-sample_ch_nd_1: "data/sampleData/ciudades_nd_es.csv"
+sample_ch_cn_0: "data/sampleData/countries_cn.csv"
+sample_ch_cn_1: "data/sampleData/countries_regions_cn.csv"
+sample_ch_nd_0: "data/sampleData/countries_nd.csv"
+sample_ch_nd_1: "data/sampleData/countries_regions_nd.csv"
 sample_ch_nm_0: Planets
-sample_ch_nm_1: Cities and departments of Colombia
+#sample_ch_nm_1: Cities and departments of Colombia
+sample_ch_nm_1: World countries by continent and region
 paste: Copy & paste
 paste_pl: Copy and paste it here
 upload: CSV/XLS upload  
@@ -49,3 +50,7 @@ diamond: Diamond
 triangle: Triangle
 star: Star
 text: Text
+none: No arrows
+from: From
+to: To
+middle: In the middle

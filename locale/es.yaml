@@ -4,12 +4,13 @@ options: Opciones
 viz: Red
 sample: Datos de muestra
 sample_lb: Selecciona datos de muestra
-sample_ch_cn_0: "data/sampleData/planetas_cn_es.csv"
-sample_ch_cn_1: "data/sampleData/ciudades_cn_es.csv"
-sample_ch_nd_0: "data/sampleData/planetas_nd_es.csv"
-sample_ch_nd_1: "data/sampleData/ciudades_nd_es.csv"
+sample_ch_cn_0: "data/sampleData/countries_cn.csv"
+sample_ch_cn_1: "data/sampleData/countries_regions_cn.csv"
+sample_ch_nd_0: "data/sampleData/countries_nd.csv"
+sample_ch_nd_1: "data/sampleData/countries_regions_nd.csv"
 sample_ch_nm_0: Planetas
-sample_ch_nm_1: Ciudades y departamentos colombianos
+#sample_ch_nm_1: Ciudades y departamentos colombianos
+sample_ch_nm_1: Países del mundo por continentes y regiones
 paste: Copiar & pegar
 paste_pl: Copia y pega aquí
 upload: Subir CSV/XLS
@@ -49,3 +50,7 @@ diamond: Rombo
 triangle: Triángulo
 star: Estrella
 text: Texto
+none: Sin flechas
+from: Desde
+to: Hacia
+middle: En la mitad
