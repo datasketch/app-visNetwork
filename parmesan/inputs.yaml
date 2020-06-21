@@ -92,7 +92,7 @@ ed_size:
     label: size
     min: 0
     max: 30
-    value: 3
+    value: 6
     step: 1
 ed_color:
   show: true
@@ -108,7 +108,7 @@ ed_arrows:
     label: ed_arrows
     choices:
       None:
-      - "NULL"
+      - none
       From:
       - from
       To:

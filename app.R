@@ -12,9 +12,11 @@ library(htmlwidgets)
 library(igraph)
 
 # ya subí unos datos; quiero ver una cosa de los de muestra, los escojo y entonces pierdo los míos
-# input$colorpalette devuelve el hex sin numeral no se puede hexa?
 
+# si los datos tienen columnas de title, color, ... los grafica; se podría explicar esto en algún lado
+# por ahora sólo se pueden subir connections
 
+# falta tooltip
 # poner botones en vez de radiobotones
 # better sample data
 # ¿quitar hierarchical porque también se hace con níveles?
@@ -22,6 +24,25 @@ library(igraph)
 
 
 ui <- panelsPage(useShi18ny(),
+                 tags$head(tags$style(HTML("
+                 #tab {
+                 margin-bottom: 27px;
+                 }
+                 #tab div.shiny-options-group {
+                 display: flex;
+                 }
+                 #tab div.radio label input + span {
+                 border-radius: 0.35rem;
+                 cursor: pointer;
+                 margin: 6px 2px 6px 0;
+                 padding: 10px;
+                 }
+                 #tab div.radio label input:checked + span {
+                 background-color: rgb(195, 113, 155);
+                 }
+                 #tab input[type='radio'] {
+                 display: none;
+                 }"))),
                  panel(title = ui_("upload_data"),
                        width = 200,
                        body = uiOutput("table_input")),
@@ -73,13 +94,13 @@ server <- function(input, output, session) {
   
   labels <- reactive({
     req(input$tab)
-    if (input$tab == "connections") {
+    # if (input$tab == "connections") {
       sm_f <- i_(c(#"sample_ch_cn_0", 
                    "sample_ch_cn_1"), lang())
-    } else {
-      sm_f <- i_(c(#"sample_ch_nd_0",
-                   "sample_ch_nd_1"), lang())
-    }
+    # } else {
+    #   sm_f <- i_(c(#"sample_ch_nd_0",
+    #                "sample_ch_nd_1"), lang())
+    # }
     names(sm_f) <- i_(c(#"sample_ch_nm_0",
                         "sample_ch_nm_1"), lang())
     
@@ -107,7 +128,6 @@ server <- function(input, output, session) {
     # do.call(callModule, c(tableInput, "initial_data"))
     # inputData <- eventReactive(list(labels(), input$`initial_data-tableInput`), {
     data_input$up <- do.call(callModule, c(tableInput, "initial_data", labels()))
-    #   do.call(callModule, c(tableInput, "initial_data", labels()))
   })
   
   output$data_preview <- renderUI({
@@ -118,27 +138,49 @@ server <- function(input, output, session) {
     }
   })
   
+  # observe({
+  #   req(input$`initial_data-tableInput`, data_input$up)
+  #   # d0 <- inputData()()
+  #   d0 <- data_input$up()
+  #   if (!is.null(d0)) {
+  #     if (input$tab == "connections") {
+  #       if (!identical(d0, data_input$nd)) {
+  #         data_input$cn <- d0
+  #       }
+  #     } else {
+  #       if (!identical(d0, data_input$cn)) {
+  #         data_input$nd <- d0
+  #       }
+  #     }
+  #   }
+  #   if (is.null(data_input$nd) & !is.null(data_input$cn)) {
+  #     if (all(c("to", "from") %in% names(data_input$cn))) {
+  #       data_input$nd <- data.frame(id = unique(c(data_input$cn$to, data_input$cn$from)))
+  #     }
+  #   }
+  # })
+  
   observe({
     req(input$`initial_data-tableInput`, data_input$up)
     # d0 <- inputData()()
     d0 <- data_input$up()
     if (!is.null(d0)) {
-      if (input$tab == "connections") {
-        if (!identical(d0, data_input$nd)) {
-          data_input$cn <- d0
-        }
-      } else {
-        if (!identical(d0, data_input$cn)) {
-          data_input$nd <- d0
-        }
+      data_input$cn <- d0
+      if (all(c("to", "from") %in% names(d0))) {
+        data_input$nd <- data.frame(id = unique(c(d0$to, d0$from)))
       }
-    }
-    if (is.null(data_input$nd) & !is.null(data_input$cn)) {
-      if (all(c("to", "from") %in% names(data_input$cn))) {
-        data_input$nd <- data.frame(id = unique(c(data_input$cn$to, data_input$cn$from)))
-      }
+      
+      #   if (!identical(d0, data_input$nd)) {
+      #     data_input$cn <- d0
+      #   }
+      # } else {
+      #   if (!identical(d0, data_input$cn)) {
+      #     data_input$nd <- d0
+      #   }
+      # }
     }
   })
+
   
   observe({
     # print(input$hotr_cn_input)
@@ -232,22 +274,28 @@ server <- function(input, output, session) {
       visNodes(shape = input$nd_shape,
                size = input$nd_size,
                borderWidth = input$nd_border,
-               color = list(background = paste0("#", input$nd_color),
-                            border = paste0("#", input$nd_border_color)),
-               font = list(color = paste0("#", input$nd_lb_color),
+               # color = list(background = paste0("#", input$nd_color),
+               #              border = paste0("#", input$nd_border_color)),
+               # font = list(color = paste0("#", input$nd_lb_color),
+               color = list(background = input$nd_color,
+                            border = input$nd_border_color),
+               font = list(color = input$nd_lb_color,
                            size = input$nd_lb_size),
                shadow = input$nd_shadow) %>%
       visEdges(arrows = input$ed_arrows,
                smooth = input$ed_smooth,
                width = input$ed_size,
-               color = list(color = paste0("#", input$ed_color)),
-               font = list(color = paste0("#", input$nd_lb_color),
+               # color = list(color = paste0("#", input$ed_color)),
+               # font = list(color = paste0("#", input$nd_lb_color),
+               color = list(color = input$ed_color),
+               font = list(color = input$nd_lb_color,
                            size = input$nd_lb_size),
                shadow = input$ed_shadow) %>%
       visInteraction(dragNodes = input$drag_nodes,
                      dragView = input$drag_view,
-                     zoomView = input$zoom) %>%
-      visLayout(randomSeed = 32)
+                     zoomView = FALSE) %>%
+      visInteraction(navigationButtons = input$zoom) %>%
+      visLayout(randomSeed = 32) 
     if (input$layout == "hierarchical") {
       v0 <- v0 %>%
         visHierarchicalLayout()
@@ -266,7 +314,7 @@ server <- function(input, output, session) {
   output$result <- renderVisNetwork({
     # session$sendCustomMessage("setButtonState", c("none", "download_data_button-downloadHtmlwidget"))
     req(ntwrk())
-    ntwrk()
+    # ntwrk()
     # req(r0$n)
     # r0$n
   })

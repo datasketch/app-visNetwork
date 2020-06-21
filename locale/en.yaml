@@ -42,7 +42,7 @@ igraph: Standard
 circle: Circular
 drag_nodes: Drag nodes
 drag_view: Drag view
-zoom: Zoom
+zoom: Navigation controls
 no_lb: No labels
 dot: Dot
 square: Square
@@ -53,4 +53,4 @@ text: Text
 none: No arrows
 from: From
 to: To
-middle: In the middle
+middle: Middle

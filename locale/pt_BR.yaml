@@ -42,7 +42,7 @@ igraph: Padrão
 circle: Circular
 drag_nodes: Arrastrar nós
 drag_view: Arrastrar visão
-zoom: Ampliação
+zoom: Controles de navegação
 no_lb: Sem rótulos
 dot: Círculo
 square: Quadrado
@@ -53,4 +53,4 @@ text: Texto
 none: Sem setas
 from: Desde
 to: Em direção a
-middle: Na metade
+middle: Metade
