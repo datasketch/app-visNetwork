@@ -11,15 +11,20 @@ library(rio)
 library(htmlwidgets)
 library(igraph)
 
+# dsmodules poner paquetes rio, knitr, pander, en imports
+# en parmesan o dsmodules hay un map_lgl de tidyverse
+# loaders hablar con crml
+
 # ya subí unos datos; quiero ver una cosa de los de muestra, los escojo y entonces pierdo los míos
 
 # si los datos tienen columnas de title, color, ... los grafica; se podría explicar esto en algún lado
 # por ahora sólo se pueden subir connections
 
 # falta tooltip
-# poner botones en vez de radiobotones
-# better sample data
-# ¿quitar hierarchical porque también se hace con níveles?
+# colorear por columna
+# tomar datos de la tabla (después de que -tal vez- sean editados)
+# ¿traducir nombres de columnas?
+# tamaño edges y nodes
 
 
 
@@ -65,6 +70,7 @@ ui <- panelsPage(useShi18ny(),
                        color = "chardonnay",
                        can_collapse = FALSE,
                        body = div(langSelectorInput("lang", position = "fixed"),
+                                  # dropdownActionInput("dn", "Download", choices = c("png", "jpge", "pdf")),
                                   visNetworkOutput("result", height = "80vh"),
                                   shinypanels::modal(id = "download",
                                                      title = ui_("download_net"),
@@ -76,7 +82,7 @@ ui <- panelsPage(useShi18ny(),
 server <- function(input, output, session) {
   
   i18n <- list(defaultLang = "en", availableLangs = c("es", "en", "pt_BR"))
-  lang <- callModule(langSelector, "lang", i18n = i18n, showSelector = TRUE)
+  lang <- callModule(langSelector, "lang", i18n = i18n, showSelector = FALSE)
   observeEvent(lang(), {uiLangUpdate(input$shi18ny_ui_classes, lang())})  
   
   data_input <- reactiveValues(up = NULL,
@@ -95,14 +101,14 @@ server <- function(input, output, session) {
   labels <- reactive({
     req(input$tab)
     # if (input$tab == "connections") {
-      sm_f <- i_(c(#"sample_ch_cn_0", 
-                   "sample_ch_cn_1"), lang())
+    sm_f <- i_(c(#"sample_ch_cn_0", 
+      "sample_ch_cn_1"), lang())
     # } else {
     #   sm_f <- i_(c(#"sample_ch_nd_0",
     #                "sample_ch_nd_1"), lang())
     # }
     names(sm_f) <- i_(c(#"sample_ch_nm_0",
-                        "sample_ch_nm_1"), lang())
+      "sample_ch_nm_1"), lang())
     
     list(sampleLabel = i_("sample_lb", lang()), 
          sampleFile = sm_f,
@@ -180,12 +186,12 @@ server <- function(input, output, session) {
       # }
     }
   })
-
+  
   
   observe({
     # print(input$hotr_cn_input)
-      # data_input$nd <- hotr_table(input$hotr_nd_input)
-      # data_input$cn <- hotr_table(input$hotr_cn_input))
+    # data_input$nd <- hotr_table(input$hotr_nd_input)
+    # data_input$cn <- hotr_table(input$hotr_cn_input))
   })
   
   output$connections_preview <- renderUI({
@@ -236,8 +242,6 @@ server <- function(input, output, session) {
     c0
   })
   
-  r0 <- reactiveValues(n = NULL)
-  
   cn <- reactive({
     hotr_table(input$hotr_cn_input)
   })
@@ -248,8 +252,9 @@ server <- function(input, output, session) {
   
   # observe({
   ntwrk <- reactive({
-  # ntwrk <- eventReactive(list(nd(), cn()), {
+    # ntwrk <- eventReactive(list(nd(), cn()), {
     req(data_input$cn, data_input$nd)
+    # Sys.sleep(10)
     # req(cn())
     # req(input$hotr_nd_input$data, input$hotr_cn_input$data)
     # data_input$cn
@@ -261,8 +266,57 @@ server <- function(input, output, session) {
     cn <- data_input$cn
     # nd <- hotr_table(input$hotr_nd_input)
     # cn <- hotr_table(input$hotr_cn_input)
-    # nd <- nd()
-    # cn <- cn()
+    # if (!is.null(cn) & !is.null(nd)) {
+    tl0 <- input$nd_tooltip
+    tl1 <- input$ed_tooltip
+    if (nzchar(tl0)) {
+      invisible(map(names(nd), function(e) {
+        rp <- paste0("\\{", e, "}")
+        if (grepl(rp, tl0[1])) {
+          tl0[1] <- gsub(rp, paste0("\\{", e, "} "), tl0[1])
+          s0 <- strsplit(tl0[1], rp)[[1]]
+          tl2 <- c()
+          map(seq_along(s0), function(w) {
+            if (w + 1 <= length(s0)) {
+              tl2 <<- paste0(tl2, s0[w], nd[[e]])
+            } else {
+              tl2 <<- paste0(tl2, s0[w])
+            }
+          })
+          tl0 <<- tl2
+        }
+      }))
+    } else {
+      tl0 <- c()
+      map(names(nd), function(i) {
+        tl0 <<- paste0(tl0, "<span style = 'font-size:15px;'><strong>", i, ": </strong> ", nd[[i]], "</span><br/>")
+      }) 
+    }
+    nd$title <- tl0
+    if (nzchar(tl1)) {
+      invisible(map(names(cn), function(e) {
+        rp <- paste0("\\{", e, "}")
+        if (grepl(rp, tl1[1])) {
+          tl1[1] <- gsub(rp, paste0("\\{", e, "} "), tl1[1])
+          s0 <- strsplit(tl1[1], rp)[[1]]
+          tl3 <- c()
+          map(seq_along(s0), function(w) {
+            if (w + 1 <= length(s0)) {
+              tl3 <<- paste0(tl3, s0[w], cn[[e]])
+            } else {
+              tl3 <<- paste0(tl3, s0[w])
+            }
+          })
+          tl1 <<- tl3
+        }
+      }))
+    } else {
+      tl1 <- c()
+      map(names(cn), function(i) {
+        tl1 <<- paste0(tl1, "<span style = 'font-size:15px;'><strong>", i, ": </strong> ", cn[[i]], "</span><br/>")
+      }) 
+    }
+    cn$title <- tl1
     if (input$nd_lb != "no") {
       nd$label <- nd[[input$nd_lb]]
     }
@@ -270,7 +324,7 @@ server <- function(input, output, session) {
       cn$label <- cn[[input$ed_lb]]
     }
     # v0 <- visNetwork(nodes, edges, main = input$title) %>%
-    v0 <- visNetwork(nodes = nd, edges = cn, main = input$title) %>%
+    visNetwork(nodes = nd, edges = cn, main = input$title) %>%
       visNodes(shape = input$nd_shape,
                size = input$nd_size,
                borderWidth = input$nd_border,
@@ -295,19 +349,9 @@ server <- function(input, output, session) {
                      dragView = input$drag_view,
                      zoomView = FALSE) %>%
       visInteraction(navigationButtons = input$zoom) %>%
-      visLayout(randomSeed = 32) 
-    if (input$layout == "hierarchical") {
-      v0 <- v0 %>%
-        visHierarchicalLayout()
-    } else if (input$layout == "igraph") {
-      # v0 <- v0 %>%
-      #   visIgraphLayout()
-    } else if (input$layout == "circle") {
-      v0 <- v0 %>%
-        visIgraphLayout("layout_in_circle")
-    }
-    # v0
-    r0$n <- v0
+      visLayout(randomSeed = 32) %>%
+      visIgraphLayout(input$layout)
+    # }
   })
   
   # renderizando reactable

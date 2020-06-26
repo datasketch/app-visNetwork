@@ -32,7 +32,8 @@ nd_color:
   input_params:
     label: color
     colors: 
-      - "#C3719B"
+      #- "#C3719B"
+      - "#8E1A55"
 nd_border:
   show: true
   input_type: sliderInput
@@ -40,7 +41,7 @@ nd_border:
     label: border
     min: 0
     max: 10
-    value: 1
+    value: 2
     step: 1
 nd_border_color:
   show: true
@@ -85,12 +86,20 @@ nd_lb_size:
     max: 100
     value: 15
     step: 1
+nd_tooltip:
+  show: true
+  input_type: textInput
+  input_params:
+    label: tooltip
+  input_info:
+    icon: info-circle
+    text: i_nd_tooltip
 ed_size:
   show: true
   input_type: sliderInput
   input_params:
     label: size
-    min: 0
+    min: 1
     max: 30
     value: 6
     step: 1
@@ -153,6 +162,14 @@ ed_lb_size:
     max: 100
     value: 15
     step: 1    
+ed_tooltip:
+  show: true
+  input_type: textInput
+  input_params:
+    label: tooltip    
+  input_info:
+    icon: info-circle
+    text: i_cn_tooltip  
 title:
   show: true
   input_type: textInput
@@ -165,11 +182,23 @@ layout:
     label: layout
     choices:
       Standard:
-      - igraph
-      Hierarchical:
-      - hierarchical
+      - layout_nicely
       Circle:
-      - circle
+      - layout_in_circle
+      Tree:
+      - layout_as_tree
+      Star:
+      - layout_as_star
+      Grid:
+      - layout_on_grid
+      Sphere:
+      - layout_on_sphere
+      Random:
+      - layout_randomly
+      KK:
+      - layout_with_kk
+      Sugiyama:
+      - layout_with_sugiyama
 drag_nodes:
   show: true
   input_type: checkboxInput

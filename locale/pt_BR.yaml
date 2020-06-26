@@ -37,9 +37,6 @@ ed_arrows: Setas
 ed_smooth: Linhas curvas
 title: Título
 layout: Distribuição
-hierarchical: Hierárquica
-igraph: Padrão
-circle: Circular
 drag_nodes: Arrastrar nós
 drag_view: Arrastrar visão
 zoom: Controles de navegação
@@ -54,3 +51,15 @@ none: Sem setas
 from: Desde
 to: Em direção a
 middle: Metade
+tooltip: Tooltip
+layout_nicely: Padrão
+layout_in_circle: Circular
+layout_as_tree: Árvore
+layout_as_star: Estrela
+layout_on_grid: Grelha
+layout_on_sphere: Esfera
+layout_randomly: Aleatório
+layout_with_kk: KK
+layout_with_sugiyama: Sugiyama
+i_nd_tooltip: Informações exibidas ao passar o mouse sobre um nó. Para usar valores da tabela de nós, use chaves e dentro deles, o nome da coluna i.e. {nome_coluna}.
+i_cn_tooltip: Informações exibidas ao passar o mouse sobre uma conexão. Para usar valores da tabela de conexões, use chaves e dentro deles, o nome da coluna i.e. {nome_coluna}.

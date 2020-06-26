@@ -37,9 +37,6 @@ ed_arrows: Arrows
 ed_smooth: Smooth lines
 title: Title
 layout: Layout
-hierarchical: Hierarchical
-igraph: Standard
-circle: Circular
 drag_nodes: Drag nodes
 drag_view: Drag view
 zoom: Navigation controls
@@ -54,3 +51,15 @@ none: No arrows
 from: From
 to: To
 middle: Middle
+tooltip: Tooltip
+layout_nicely: Standard
+layout_in_circle: Circle
+layout_as_tree: Tree
+layout_as_star: Star
+layout_on_grid: Grid
+layout_on_sphere: Sphere
+layout_randomly: Random
+layout_with_kk: KK
+layout_with_sugiyama: Sugiyama
+i_nd_tooltip: Information shown when hovering over a node. To use the values within the nodes table, use curly brackets and the column's name inside i.e. {column_name}.
+i_cn_tooltip: Information shown when hovering over a connection. To use the values within the connections table, use curly brackets and the column's name inside i.e. {column_name}.

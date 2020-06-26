@@ -37,9 +37,6 @@ ed_arrows: Flechas
 ed_smooth: Líneas curvas
 title: Titulo
 layout: Distribución
-hierarchical: Jerárquica
-igraph: Estándar
-circle: Circular
 drag_nodes: Arrastrar nodos
 drag_view: Arrastrar vista
 zoom: Controles navegación
@@ -54,3 +51,15 @@ none: Sin flechas
 from: Desde
 to: Hacia
 middle: Mitad
+tooltip: Tooltip
+layout_nicely: Estándar
+layout_in_circle: Círculo
+layout_as_tree: Árbol
+layout_as_star: Estrella
+layout_on_grid: Grilla
+layout_on_sphere: Esfera
+layout_randomly: Aleatorio
+layout_with_kk: KK
+layout_with_sugiyama: Sugiyama
+i_nd_tooltip: Información que se muestra al pasar el cursor sobre un nodo. Para usar valores de la tabla de nodos, use llaves y dentro de ellas, el nombre de la columna i.e. {nombre_columna}.
+i_cn_tooltip: Información que se muestra al pasar el cursor sobre una conexión. Para usar valores de la tabla de las conexiones, use llaves y dentro de ellas, el nombre de la columna i.e. {nombre_columna}.

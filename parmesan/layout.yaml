@@ -1,3 +1,13 @@
+network:
+  label: network
+  inputs:
+    - title
+    - layout #hierarquical, igraph, circle
+    #- fixed network?------------------------------
+    #- random seed
+    - drag_nodes
+    - drag_view
+    - zoom
 nodes:
   label: nodes
   inputs:
@@ -10,7 +20,8 @@ nodes:
    # hover, highlight 
    - nd_lb
    - nd_lb_color
-   - nd_lb_size
+   - nd_lb_size 
+   - nd_tooltip
 edges:
   label: connections
   inputs:
@@ -22,13 +33,4 @@ edges:
     - ed_lb
     - ed_lb_color #font.color
     - ed_lb_size
-network:
-  label: network
-  inputs:
-    - title
-    - layout #hierarquical, igraph, circle
-    #- fixed network?------------------------------
-    #- random seed
-    - drag_nodes
-    - drag_view
-    - zoom
+    - ed_tooltip
