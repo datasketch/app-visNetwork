@@ -7,13 +7,10 @@ library(dsmodules)
 library(hotr)
 library(visNetwork)
 library(tidyverse)
-library(rio)
 library(htmlwidgets)
 library(igraph)
+library(shinycustomloader)
 
-# dsmodules poner paquetes rio, knitr, pander, en imports
-# en parmesan o dsmodules hay un map_lgl de tidyverse
-# loaders hablar con crml
 
 # ya subí unos datos; quiero ver una cosa de los de muestra, los escojo y entonces pierdo los míos
 
@@ -24,8 +21,6 @@ library(igraph)
 # tomar datos de la tabla (después de que -tal vez- sean editados)
 # ¿traducir nombres de columnas?
 # tamaño edges y nodes
-
-# agregar a parmesan textAreaInput
 
 
 
@@ -75,12 +70,9 @@ ui <- panelsPage(useShi18ny(),
                        color = "chardonnay",
                        can_collapse = FALSE,
                        body = div(langSelectorInput("lang", position = "fixed"),
-                                  # dropdownActionInput("dn", "Download", choices = c("png", "jpge", "pdf")),
-                                  visNetworkOutput("result", height = "80vh"),
-                                  shinypanels::modal(id = "download",
-                                                     title = ui_("download_net"),
-                                                     uiOutput("modal"))),
-                       footer = shinypanels::modalButton(label = "Download network", modal_id = "download")))
+                                  uiOutput("download"),
+                                  br(),
+                                  withLoader(visNetworkOutput("result", height = "80vh"), type = "image", loader = "loading_gris.gif"))))
 
 
 
@@ -112,8 +104,7 @@ server <- function(input, output, session) {
     #   sm_f <- i_(c(#"sample_ch_nd_0",
     #                "sample_ch_nd_1"), lang())
     # }
-    names(sm_f) <- i_(c(#"sample_ch_nm_0",
-      "sample_ch_nm_1"), lang())
+    names(sm_f) <- i_(c("sample_ch_nm_1"), lang())
     
     list(sampleLabel = i_("sample_lb", lang()), 
          sampleFile = sm_f,
@@ -180,33 +171,17 @@ server <- function(input, output, session) {
       if (all(c("to", "from") %in% names(d0))) {
         data_input$nd <- data.frame(id = unique(c(d0$to, d0$from)))
       }
-      
-      #   if (!identical(d0, data_input$nd)) {
-      #     data_input$cn <- d0
-      #   }
-      # } else {
-      #   if (!identical(d0, data_input$cn)) {
-      #     data_input$nd <- d0
-      #   }
-      # }
     }
-  })
-  
-  
-  observe({
-    # print(input$hotr_cn_input)
-    # data_input$nd <- hotr_table(input$hotr_nd_input)
-    # data_input$cn <- hotr_table(input$hotr_cn_input))
   })
   
   output$connections_preview <- renderUI({
     req(data_input$cn)
-    suppressWarnings(hotr("hotr_cn_input", data = data_input$cn, order = NULL, options = list(height = 470), enableCTypes = FALSE))
+    suppressWarnings(hotr("hotr_cn_input", data = data_input$cn, order = NULL, options = list(height = "80vh"), enableCTypes = FALSE))
   })
   
   output$nodes_preview <- renderUI({
     req(data_input$nd)
-    suppressWarnings(hotr("hotr_nd_input", data = data_input$nd, order = NULL, options = list(height = 470), enableCTypes = FALSE))
+    suppressWarnings(hotr("hotr_nd_input", data = data_input$nd, order = NULL, options = list(height = "80vh"), enableCTypes = FALSE))
   })
   
   path <- "parmesan"
@@ -229,6 +204,7 @@ server <- function(input, output, session) {
     names(ch2) <- i_(ch2, lang())
     ch3 <- c("connections", "nodes")
     names(ch3) <- toupper(i_(ch3, lang()))
+    
     updateSelectizeInput(session, "nd_shape", choices = ch0, selected = input$nd_shape)
     updateSelectizeInput(session, "layout", choices = ch1, selected = input$layout)
     updateRadioButtons(session, "ed_arrows", choices = ch2, selected = input$ed_arrows)
@@ -359,6 +335,12 @@ server <- function(input, output, session) {
     # }
   })
   
+  output$download <- renderUI({
+    lb <- i_("download_net", lang())
+    dw <- i_("download", lang())
+    downloadHtmlwidgetUI("download_data_button", label = lb, text = paste(dw, "HTML"), display = "dropdown")
+  })
+  
   # renderizando reactable
   output$result <- renderVisNetwork({
     # session$sendCustomMessage("setButtonState", c("none", "download_data_button-downloadHtmlwidget"))
@@ -368,24 +350,16 @@ server <- function(input, output, session) {
     # r0$n
   })
   
-  output$modal <- renderUI({
-    dw <- i_("download", lang())#Download HTML
-    downloadHtmlwidgetUI("download_data_button", paste(dw, "HTML"))
-  })
+  # output$modal <- renderUI({
+  #   dw <- i_("download", lang())#Download HTML
+  #   downloadHtmlwidgetUI("download_data_button", paste(dw, "HTML"))
+  # })
   
   # descargas
   callModule(downloadHtmlwidget, "download_data_button", widget = reactive(ntwrk()), name = "network")
-  
-  
-  
-  
   
 }
 
 
 
 shinyApp(ui, server)
-
-
-
-

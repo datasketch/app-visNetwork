@@ -22,11 +22,13 @@ google_sh_lb: Dados de Google sheet
 google_sh_pl: https://docs.google.com/spreadsheets/...
 google_sh_pg_lb: Folha
 download_net: Baixar rede
+download: Baixar
 connections: Conexão
 nodes: Nós
 shape: Forma
 size: Tamanho
 color: Cor
+background_color: Cor de fundo
 border: Tamanho da borda
 border_color: Cor da borda
 shadow: Sombra
