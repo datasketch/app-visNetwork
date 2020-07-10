@@ -28,7 +28,6 @@ nodes: Nós
 shape: Forma
 size: Tamanho
 color: Cor
-background_color: Cor de fundo
 border: Tamanho da borda
 border_color: Cor da borda
 shadow: Sombra

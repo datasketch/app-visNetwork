@@ -1,0 +1,12 @@
+name: app-visNetwork
+title: app-visNetwork
+username:
+account: randommonkey
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2555055
+bundleId: 3374349
+url: https://randommonkey.shinyapps.io/app-visNetwork/
+when: 1594344877.89184
+asMultiple: FALSE
+asStatic: FALSE
