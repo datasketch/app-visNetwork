@@ -5,8 +5,8 @@ account: randommonkey
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2555055
-bundleId: 3374349
+bundleId: 3393631
 url: https://randommonkey.shinyapps.io/app-visNetwork/
-when: 1594344877.89184
+when: 1594784438.71076
 asMultiple: FALSE
 asStatic: FALSE

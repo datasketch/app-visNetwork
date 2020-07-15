@@ -12,19 +12,9 @@ library(igraph)
 library(shinycustomloader)
 
 
-# ya subí unos datos; quiero ver una cosa de los de muestra, los escojo y entonces pierdo los míos
-
-# si los datos tienen columnas de title, color, ... los grafica; se podría explicar esto en algún lado
-# por ahora sólo se pueden subir connections
-
-# colorear por columna
-# tomar datos de la tabla (después de que -tal vez- sean editados)
-# ¿traducir nombres de columnas?
-# tamaño edges y nodes
-
-
 
 ui <- panelsPage(useShi18ny(),
+                 showDebug(),
                  tags$head(tags$style(HTML("
                  #tab {
                  margin-bottom: 27px;
@@ -159,10 +149,11 @@ server <- function(input, output, session) {
     # d0 <- inputData()()
     d0 <- data_input$up()
     if (!is.null(d0)) {
-      data_input$cn <- d0
-      if (all(c("to", "from") %in% names(d0))) {
-        data_input$nd <- data.frame(id = unique(c(d0$to, d0$from)))
+      if (!all(c("to", "from") %in% names(d0))) {
+        names(d0)[1:2] <- c("from", "to")
       }
+      data_input$nd <- data.frame(id = unique(c(d0$to, d0$from)))
+      data_input$cn <- d0
     }
   })
   

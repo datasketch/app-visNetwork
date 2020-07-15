@@ -91,10 +91,11 @@ nd_lb_size:
     step: 1
 nd_tooltip:
   show: true
-  input_type: textInput
+  input_type: textAreaInput
   input_params:
     label: tooltip
     value: "id: {id}"
+    rows: 3
   input_info:
     icon: info-circle
     text: i_nd_tooltip
@@ -170,10 +171,11 @@ ed_lb_size:
     step: 1    
 ed_tooltip:
   show: true
-  input_type: textInput
+  input_type: textAreaInput
   input_params:
     label: tooltip
     value: "from: {from} <br/> to: {to}"
+    rows: 3
   input_info:
     icon: info-circle
     text: i_cn_tooltip  
