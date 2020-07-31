@@ -23,6 +23,7 @@ google_sh_pl: https://docs.google.com/spreadsheets/...
 google_sh_pg_lb: Hoja
 download_net: Descargar red
 download: Descargar
+get_link: Obtener enlace
 connections: Conexiones
 nodes: Nodos
 shape: Forma
@@ -63,5 +64,5 @@ layout_on_sphere: Esfera
 layout_randomly: Aleatorio
 layout_with_kk: KK
 layout_with_sugiyama: Sugiyama
-i_nd_tooltip: Información que se muestra al pasar el cursor sobre un nodo. Para usar valores de la tabla de nodos, use llaves y dentro de ellas, el nombre de la columna i.e. {nombre_columna}.
-i_cn_tooltip: Información que se muestra al pasar el cursor sobre una conexión. Para usar valores de la tabla de las conexiones, use llaves y dentro de ellas, el nombre de la columna i.e. {nombre_columna}.
+i_nd_tooltip: Información que se muestra al pasar el cursor sobre un nodo. Para usar valores de la tabla de nodos use llaves, y, dentro de ellas, el nombre de la columna i.e. {nombre_columna}.
+i_cn_tooltip: Información que se muestra al pasar el cursor sobre una conexión. Para usar valores de la tabla de las conexiones use llaves, y, dentro de ellas, el nombre de la columna i.e. {nombre_columna}.

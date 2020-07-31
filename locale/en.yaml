@@ -23,6 +23,7 @@ google_sh_pl: https://docs.google.com/spreadsheets/...
 google_sh_pg_lb: Sheet
 download_net: Download network
 download: Download
+get_link: Get link
 connections: Connections
 nodes: Nodes
 shape: Shape

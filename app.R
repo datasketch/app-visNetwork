@@ -159,12 +159,12 @@ server <- function(input, output, session) {
   
   output$connections_preview <- renderUI({
     req(data_input$cn)
-    suppressWarnings(hotr("hotr_cn_input", data = data_input$cn, order = NULL, options = list(height = "80vh"), enableCTypes = FALSE))
+    suppressWarnings(hotr("hotr_cn_input", data = data_input$cn, order = NULL, options = list(height = "82vh"), enableCTypes = FALSE))
   })
   
   output$nodes_preview <- renderUI({
     req(data_input$nd)
-    suppressWarnings(hotr("hotr_nd_input", data = data_input$nd, order = NULL, options = list(height = "80vh"), enableCTypes = FALSE))
+    suppressWarnings(hotr("hotr_nd_input", data = data_input$nd, order = NULL, options = list(height = "82vh"), enableCTypes = FALSE))
   })
   
   path <- "parmesan"
@@ -316,25 +316,18 @@ server <- function(input, output, session) {
   output$download <- renderUI({
     lb <- i_("download_net", lang())
     dw <- i_("download", lang())
-    downloadHtmlwidgetUI("download_data_button", label = lb, text = paste(dw, "HTML"), display = "dropdown")
+    gl <- i_("get_link", lang())
+    downloadHtmlwidgetUI("download_data_button", dropdownLabel = lb, text = dw,  formats = c("link", "html"),
+                         display = "dropdown", getLinkLabel = gl, modalTitle = gl)
   })
   
   # renderizando reactable
   output$result <- renderVisNetwork({
-    # session$sendCustomMessage("setButtonState", c("none", "download_data_button-downloadHtmlwidget"))
     req(ntwrk())
-    # ntwrk()
-    # req(r0$n)
-    # r0$n
   })
   
-  # output$modal <- renderUI({
-  #   dw <- i_("download", lang())#Download HTML
-  #   downloadHtmlwidgetUI("download_data_button", paste(dw, "HTML"))
-  # })
-  
   # descargas
-  callModule(downloadHtmlwidget, "download_data_button", widget = reactive(ntwrk()), name = "network")
+  callModule(downloadHtmlwidget, "download_data_button", widget = reactive(ntwrk()), name = "network", formats = c("link", "html"))
   
 }
 
