@@ -24,6 +24,16 @@ google_sh_pg_lb: Sheet
 download_net: Download network
 download: Download
 get_link: Get link
+gl_name: Name
+gl_slug: Slug
+gl_description: Description
+gl_license: License
+gl_tags: Tags
+gl_category: Category
+gl_save: Save in dslibrary
+gl_url: URL
+gl_iframe: Copy to embed
+gl_error: There has been a problem; try again later.
 connections: Connections
 nodes: Nodes
 shape: Shape

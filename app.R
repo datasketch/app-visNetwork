@@ -4,6 +4,7 @@ library(shinyinvoer)
 library(shi18ny)
 library(V8)
 library(dsmodules)
+library(dspins)
 library(hotr)
 library(visNetwork)
 library(tidyverse)
@@ -11,7 +12,7 @@ library(htmlwidgets)
 library(igraph)
 library(shinycustomloader)
 
-
+# cambiar color tabs
 
 ui <- panelsPage(useShi18ny(),
                  showDebug(),
@@ -29,7 +30,7 @@ ui <- panelsPage(useShi18ny(),
                  padding: 10px;
                  }
                  #tab div.radio label input:checked + span {
-                 background-color: #B70F7F;
+                 background-color: #da1c95;
                  color: #ffffff;
                  font-size: 13px;
                  font-weight: 700;
@@ -38,6 +39,7 @@ ui <- panelsPage(useShi18ny(),
                  #tab input[type='radio'] {
                  display: none;
                  }"))),
+                 
                  panel(title = ui_("upload_data"),
                        width = 200,
                        body = uiOutput("table_input")),
@@ -72,6 +74,7 @@ server <- function(input, output, session) {
     choices <- c("sampleData", "pasted", "fileUpload", "googleSheets")
     names(choices) <- i_(c("sample", "paste", "upload", "google"), lang = lang())
     tableInputUI("initial_data",
+                 label = "",
                  choices = choices,
                  # selected is important for inputs not seem re-initialized
                  selected = ifelse(is.null(input$`initial_data-tableInput`), "sampleData", input$`initial_data-tableInput`))
@@ -108,10 +111,7 @@ server <- function(input, output, session) {
   })
   
   observeEvent(list(labels(), input$`initial_data-tableInput`), {
-    # observe({
-    # do.call(callModule, c(tableInput, "initial_data"))
-    # inputData <- eventReactive(list(labels(), input$`initial_data-tableInput`), {
-    data_input$up <- do.call(callModule, c(tableInput, "initial_data", labels()))
+    data_input$up <- do.call(tableInputServer, c("initial_data", labels()))
   })
   
   output$data_preview <- renderUI({
@@ -317,8 +317,15 @@ server <- function(input, output, session) {
     lb <- i_("download_net", lang())
     dw <- i_("download", lang())
     gl <- i_("get_link", lang())
-    downloadHtmlwidgetUI("download_data_button", dropdownLabel = lb, text = dw,  formats = c("link", "html"),
-                         display = "dropdown", getLinkLabel = gl, modalTitle = gl)
+    mb <- list(textInput("name", i_("gl_name", lang())),
+               textInput("description", i_("gl_description", lang())),
+               selectInput("license", i_("gl_license", lang()), choices = c("CC0", "CC-BY")),
+               selectizeInput("tags", i_("gl_tags", lang()), choices = list("No tag" = "no-tag"), multiple = TRUE, options = list(plugins= list('remove_button', 'drag_drop'))),
+               selectizeInput("category", i_("gl_category", lang()), choices = list("No category" = "no-category")))
+    downloadDsUI("download_data_button", dropdownLabel = lb, text = dw, formats = "html",
+                 display = "dropdown", dropdownWidth = 170, getLinkLabel = gl, modalTitle = gl, modalBody = mb,
+                 modalButtonLabel = i_("gl_save", lang()), modalLinkLabel = i_("gl_url", lang()), modalIframeLabel = i_("gl_iframe", lang()),
+                 modalFormatChoices = c("HTML" = "html", "PNG" = "png"))
   })
   
   # renderizando reactable
@@ -326,8 +333,40 @@ server <- function(input, output, session) {
     req(ntwrk())
   })
   
+  # url params
+  par <- list(user_name = "brandon", org_name = NULL)
+  url_par <- reactive({
+    url_params(par, session)
+  })
+  
+  # prepare element for pining (for htmlwidgets or ggplots)
+  # función con user board connect y set locale
+  pin_ <- function(x, bkt, ...) {
+    x <- dsmodules:::eval_reactives(x)
+    bkt <- dsmodules:::eval_reactives(bkt)
+    nm <- input$`download_data_button-modal_form-name`
+    if (!nzchar(input$`download_data_button-modal_form-name`)) {
+      nm <- paste0("saved", "_", gsub("[ _:]", "-", substr(as.POSIXct(Sys.time()), 1, 19)))
+      updateTextInput(session, "download_data_button-modal_form-name", value = nm)
+    }
+    dv <- dsviz(x,
+                name = nm,
+                description = input$`download_data_button-modal_form-description`,
+                license = input$`download_data_button-modal_form-license`,
+                tags = input$`download_data_button-modal_form-tags`,
+                category = input$`download_data_button-modal_form-category`)
+    dspins_user_board_connect(bkt)
+    Sys.setlocale(locale = "en_US.UTF-8")
+    pin(dv, bucket_id = bkt)
+  }
+  
   # descargas
-  callModule(downloadHtmlwidget, "download_data_button", widget = reactive(ntwrk()), name = "network", formats = c("link", "html"))
+  observe({
+    downloadDsServer("download_data_button", element = reactive(ntwrk()), formats = "html",
+                     errorMessage = i_("gl_error", lang()),
+                     modalFunction = pin_, reactive(ntwrk()),
+                     bkt = url_par()$inputs$user_name)
+  })
   
 }
 
