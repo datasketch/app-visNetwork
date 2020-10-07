@@ -5,8 +5,8 @@ account: datasketch
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2555044
-bundleId: 3565866
+bundleId: 3591305
 url: https://datasketch.shinyapps.io/app-visNetwork/
-when: 1598582643.08031
+when: 1599186365.72696
 asMultiple: FALSE
 asStatic: FALSE

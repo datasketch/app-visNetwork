@@ -12,34 +12,49 @@ library(htmlwidgets)
 library(igraph)
 library(shinycustomloader)
 
-# cambiar color tabs
+webshot::install_phantomjs()
 
-ui <- panelsPage(useShi18ny(),
+styles <- "
+.panel {
+  flex-shrink: unset;
+}
+
+.panel-header {
+  position: inherit;
+  z-index: inherit;
+}
+
+#tab {
+  margin-bottom: 27px;
+}
+#tab div.shiny-options-group {
+  display: flex;
+}
+
+#tab div.radio label input + span {
+  border-radius: 0.35rem;
+  cursor: pointer;
+  margin: 6px 2px 6px 0;
+  padding: 10px;
+}
+
+#tab div.radio label input:checked + span {
+  background-color: #da1c95;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+#tab input[type='radio'] {
+  display: none;
+}
+"
+
+
+ui <- panelsPage(styles = styles,
+                 useShi18ny(),
                  showDebug(),
-                 tags$head(tags$style(HTML("
-                 #tab {
-                 margin-bottom: 27px;
-                 }
-                 #tab div.shiny-options-group {
-                 display: flex;
-                 }
-                 #tab div.radio label input + span {
-                 border-radius: 0.35rem;
-                 cursor: pointer;
-                 margin: 6px 2px 6px 0;
-                 padding: 10px;
-                 }
-                 #tab div.radio label input:checked + span {
-                 background-color: #da1c95;
-                 color: #ffffff;
-                 font-size: 13px;
-                 font-weight: 700;
-                 letter-spacing: 0.7px;
-                 }
-                 #tab input[type='radio'] {
-                 display: none;
-                 }"))),
-                 
                  panel(title = ui_("upload_data"),
                        width = 200,
                        body = uiOutput("table_input")),
@@ -48,7 +63,7 @@ ui <- panelsPage(useShi18ny(),
                        body = div(radioButtons("tab", "", c("connections", "nodes")),
                                   uiOutput("data_preview"))),
                  panel(title = ui_("options"),
-                       width = 250,
+                       width = 270,
                        color = "chardonnay",
                        body = uiOutput("controls")),
                  panel(title = ui_("viz"),
