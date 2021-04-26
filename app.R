@@ -2,17 +2,20 @@ library(shinypanels)
 library(parmesan)
 library(shinyinvoer)
 library(shi18ny)
-library(V8)
 library(dsmodules)
 library(dspins)
 library(hotr)
+library(shinycustomloader)
+library(shinydisconnect)
+library(shinybusy)
+
+library(V8)
 library(visNetwork)
 library(tidyverse)
 library(htmlwidgets)
 library(igraph)
-library(shinycustomloader)
 
-webshot::install_phantomjs()
+#webshot::install_phantomjs()
 
 styles <- "
 .panel {
@@ -52,40 +55,76 @@ styles <- "
 "
 
 
-ui <- panelsPage(styles = styles,
-                 useShi18ny(),
-                 showDebug(),
-                 panel(title = ui_("upload_data"),
-                       width = 200,
-                       body = uiOutput("table_input")),
-                 panel(title = ui_("dataset"),
-                       width = 300,
-                       body = div(radioButtons("tab", "", c("connections", "nodes")),
-                                  uiOutput("data_preview"))),
-                 panel(title = ui_("options"),
-                       width = 270,
-                       color = "chardonnay",
-                       body = uiOutput("controls")),
-                 panel(title = ui_("viz"),
-                       title_plugin = uiOutput("download"),
-                       color = "chardonnay",
-                       can_collapse = FALSE,
-                       body = div(langSelectorInput("lang", position = "fixed"),
-                                  withLoader(visNetworkOutput("result", height = "80vh"), type = "image", loader = "loading_gris.gif"))))
+ui <-  panelsPage(useShi18ny(),
+                  styles = styles,
+                  disconnectMessage(
+                    text = "Tu sesión ha finalizado, si tienes algún problema trabajando con la app por favor contáctanos y cuéntanos qué ha sucedido // Your session has ended, if you have any problem working with the app please contact us and tell us what happened.",
+                    refresh = "REFRESH",
+                    background = "#ffffff",
+                    colour = "#435b69",
+                    size = 14,
+                    overlayColour = "#2a2e30",
+                    overlayOpacity = 0.85,
+                    refreshColour = "#ffffff",
+                    css = "padding: 4.8em 3.5em !important; box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1) !important;"
+                  ),
+                  busy_start_up(
+                    loader = tags$img(
+                      src = "img/loading_gris.gif",
+                      width = 100
+                    ),
+                    mode = "auto",
+                    color = "#435b69",
+                    background = "#FFF"
+                  ),
+                  langSelectorInput("lang", position = "fixed"),
+                  panel(title = ui_("upload_data"),
+                        collapse = TRUE,
+                        width = 300,
+                        body = uiOutput("dataInput")),
+                  panel(title = ui_("dataset"),
+                        width = 450,
+                        body = div(radioButtons("tab", "", c("connections", "nodes")),
+                                   uiOutput("data_preview"))),
+                  panel(title = ui_("options"),
+                        width = 350,
+                        color = "chardonnay",
+                        body = uiOutput("controls")),
+                  panel(title = ui_("viz"),
+                        title_plugin = uiOutput("download"),
+                        color = "chardonnay",
+                        can_collapse = FALSE,
+                        body = div(langSelectorInput("lang", position = "fixed"),
+                                   withLoader(visNetworkOutput("result", height = "80vh"), 
+                                              type = "image", loader = "img/loading_gris.gif")))
+)
+
+
 
 
 
 server <- function(input, output, session) {
   
-  i18n <- list(defaultLang = "en", availableLangs = c("es", "en", "pt_BR"))
-  lang <- callModule(langSelector, "lang", i18n = i18n, showSelector = FALSE)
-  observeEvent(lang(), {uiLangUpdate(input$shi18ny_ui_classes, lang())})  
   
+  i18n <- list(defaultLang = "en",
+               availableLangs = c("en", "es", "pt_BR"),
+               localeDir = "locale/",  
+               customTranslationSource = "yaml"
+  )
+  
+  lang <- callModule(langSelector, "lang", i18n = i18n, showSelector = FALSE)
+  
+  observeEvent(lang(),{
+    uiLangUpdate(input$shi18ny_ui_classes, lang())
+  })
+
+  # Modulo de carga de datos ------------------------------------------------
+
   data_input <- reactiveValues(up = NULL,
                                cn = NULL,
                                nd = NULL)
-  
-  output$table_input <- renderUI({
+
+  output$dataInput <- renderUI({
     choices <- c("sampleData", "pasted", "fileUpload", "googleSheets")
     names(choices) <- i_(c("sample", "paste", "upload", "google"), lang = lang())
     tableInputUI("initial_data",
@@ -94,6 +133,7 @@ server <- function(input, output, session) {
                  # selected is important for inputs not seem re-initialized
                  selected = ifelse(is.null(input$`initial_data-tableInput`), "sampleData", input$`initial_data-tableInput`))
   })
+
   
   labels <- reactive({
     req(input$tab)
@@ -137,28 +177,6 @@ server <- function(input, output, session) {
     }
   })
   
-  # observe({
-  #   req(input$`initial_data-tableInput`, data_input$up)
-  #   # d0 <- inputData()()
-  #   d0 <- data_input$up()
-  #   if (!is.null(d0)) {
-  #     if (input$tab == "connections") {
-  #       if (!identical(d0, data_input$nd)) {
-  #         data_input$cn <- d0
-  #       }
-  #     } else {
-  #       if (!identical(d0, data_input$cn)) {
-  #         data_input$nd <- d0
-  #       }
-  #     }
-  #   }
-  #   if (is.null(data_input$nd) & !is.null(data_input$cn)) {
-  #     if (all(c("to", "from") %in% names(data_input$cn))) {
-  #       data_input$nd <- data.frame(id = unique(c(data_input$cn$to, data_input$cn$from)))
-  #     }
-  #   }
-  # })
-  
   observe({
     req(input$`initial_data-tableInput`, data_input$up)
     # d0 <- inputData()()
@@ -182,16 +200,19 @@ server <- function(input, output, session) {
     suppressWarnings(hotr("hotr_nd_input", data = data_input$nd, order = NULL, options = list(height = "82vh"), enableCTypes = FALSE))
   })
   
-  path <- "parmesan"
-  parmesan <- parmesan_load(path)
+  parmesan <- parmesan_load()
   parmesan_input <- parmesan_watch(input, parmesan)
-  parmesan_alert(parmesan, env = environment())
-  parmesan_lang <- reactive({i_(parmesan, lang(), keys = c("label", "choices", "text"))})
+  
+  parmesan_lang <- reactive({
+    i_(parmesan, lang(), keys = c("label", "choices", "text"))
+  })
   output_parmesan("controls", 
                   parmesan = parmesan_lang,
-                  input = input,
-                  output = output,
+                  input = input, 
+                  output = output, 
+                  session = session,
                   env = environment())
+  
   
   observeEvent(lang(), {
     ch0 <- as.character(parmesan$nodes$inputs[[1]]$input_params$choices)
@@ -229,23 +250,11 @@ server <- function(input, output, session) {
     hotr_table(input$hotr_nd_input)
   })
   
-  # observe({
   ntwrk <- reactive({
-    # ntwrk <- eventReactive(list(nd(), cn()), {
     req(data_input$cn, data_input$nd)
-    # Sys.sleep(10)
-    # req(cn())
-    # req(input$hotr_nd_input$data, input$hotr_cn_input$data)
-    # data_input$cn
-    # data_input$nd
-    # ¿Proxy?
-    # nodes <- data.frame(id = 1:3, label = LETTERS[1:3])
-    # edges <- data.frame(from = c(1,2), to = c(1,3))
+
     nd <- data_input$nd
     cn <- data_input$cn
-    # nd <- hotr_table(input$hotr_nd_input)
-    # cn <- hotr_table(input$hotr_cn_input)
-    # if (!is.null(cn) & !is.null(nd)) {
     tl0 <- input$nd_tooltip
     tl1 <- input$ed_tooltip
     if (nzchar(tl0)) {
@@ -302,7 +311,7 @@ server <- function(input, output, session) {
     if (input$ed_lb != "no") {
       cn$label <- cn[[input$ed_lb]]
     }
-    # v0 <- visNetwork(nodes, edges, main = input$title) %>%
+    
     visNetwork(nodes = nd, edges = cn, main = input$title) %>%
       visNodes(shape = input$nd_shape,
                size = input$nd_size,
@@ -328,59 +337,58 @@ server <- function(input, output, session) {
     # }
   })
   
-  output$download <- renderUI({
-    lb <- i_("download_net", lang())
-    dw <- i_("download", lang())
-    gl <- i_("get_link", lang())
-    mb <- list(textInput("name", i_("gl_name", lang())),
-               textInput("description", i_("gl_description", lang())),
-               selectInput("license", i_("gl_license", lang()), choices = c("CC0", "CC-BY")),
-               selectizeInput("tags", i_("gl_tags", lang()), choices = list("No tag" = "no-tag"), multiple = TRUE, options = list(plugins= list('remove_button', 'drag_drop'))),
-               selectizeInput("category", i_("gl_category", lang()), choices = list("No category" = "no-category")))
-    downloadDsUI("download_data_button", dropdownLabel = lb, text = dw, formats = "html",
-                 display = "dropdown", dropdownWidth = 170, getLinkLabel = gl, modalTitle = gl, modalBody = mb,
-                 modalButtonLabel = i_("gl_save", lang()), modalLinkLabel = i_("gl_url", lang()), modalIframeLabel = i_("gl_iframe", lang()),
-                 modalFormatChoices = c("HTML" = "html", "PNG" = "png"))
-  })
   
   # renderizando reactable
   output$result <- renderVisNetwork({
     req(ntwrk())
   })
   
-  # url params
-  par <- list(user_name = "brandon", org_name = NULL)
+  
+  par <- list(user_name = "test", org_name = NULL, plan = "basic")
   url_par <- reactive({
     url_params(par, session)
   })
   
-  # prepare element for pining (for htmlwidgets or ggplots)
-  # función con user board connect y set locale
-  pin_ <- function(x, bkt, ...) {
-    x <- dsmodules:::eval_reactives(x)
-    bkt <- dsmodules:::eval_reactives(bkt)
-    nm <- input$`download_data_button-modal_form-name`
-    if (!nzchar(input$`download_data_button-modal_form-name`)) {
-      nm <- paste0("saved", "_", gsub("[ _:]", "-", substr(as.POSIXct(Sys.time()), 1, 19)))
-      updateTextInput(session, "download_data_button-modal_form-name", value = nm)
-    }
-    dv <- dsviz(x,
-                name = nm,
-                description = input$`download_data_button-modal_form-description`,
-                license = input$`download_data_button-modal_form-license`,
-                tags = input$`download_data_button-modal_form-tags`,
-                category = input$`download_data_button-modal_form-category`)
-    dspins_user_board_connect(bkt)
-    Sys.setlocale(locale = "en_US.UTF-8")
-    pin(dv, bucket_id = bkt)
-  }
+  output$download <- renderUI({
+    
+    downloadDsUI("download_data_button",
+                 display = "dropdown",
+                 formats = c("html","jpeg", "pdf", "png"),
+                 dropdownWidth = 170,
+                 modalFormatChoices = c("HTML" = "html", "PNG" = "png"),
+                 text = i_("download", lang()),
+                 dropdownLabel = i_("download_viz", lang()),
+                 getLinkLabel = i_("get_link", lang()),
+                 modalTitle = i_("get_link", lang()),
+                 modalButtonLabel = i_("gl_save", lang()),
+                 modalLinkLabel = i_("gl_url", lang()),
+                 modalIframeLabel = i_("gl_iframe", lang()),
+                 nameLabel = i_("gl_name", lang()),
+                 descriptionLabel = i_("gl_description", lang()),
+                 sourceLabel = i_("gl_source", lang()),
+                 sourceTitleLabel = i_("gl_source_name", lang()),
+                 sourcePathLabel = i_("gl_source_path", lang()),
+                 licenseLabel = i_("gl_license", lang()),
+                 tagsLabel = i_("gl_tags", lang()),
+                 tagsPlaceholderLabel = i_("gl_type_tags", lang()),
+                 categoryLabel = i_("gl_category", lang()),
+                 categoryChoicesLabels = i_("gl_no_category", lang())
+    )
+  })
   
-  # descargas
+  
   observe({
-    downloadDsServer("download_data_button", element = reactive(ntwrk()), formats = "html",
-                     errorMessage = i_("gl_error", lang()),
-                     modalFunction = pin_, reactive(ntwrk()),
-                     bkt = url_par()$inputs$user_name)
+    req(ntwrk())
+    user_name <- url_par()$inputs$user_name
+    org_name <- url_par()$inputs$org_name
+    if (is.null(user_name) & is.null(user_name)) return()
+    downloadDsServer(id = "download_data_button",
+                     element = reactive(ntwrk()),
+                     formats = c("html", "jpeg", "pdf", "png"),
+                     errorMessage = i_("error_down", lang()),
+                     elementType = "dsviz",
+                     user_name = user_name,
+                     org_name = org_name)
   })
   
 }

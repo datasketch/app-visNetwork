@@ -22,18 +22,6 @@ google_sh_lb: Datos desde Google sheet
 google_sh_pl: https://docs.google.com/spreadsheets/...
 google_sh_pg_lb: Hoja
 download_net: Descargar red
-download: Descargar
-get_link: Obtener enlace
-gl_name: Nombre
-gl_slug: Slug
-gl_description: Descripción
-gl_license: Licencia
-gl_tags: Etiquetas
-gl_category: Categorías
-gl_save: Guardar en dslibrary
-gl_url: URL
-gl_iframe: Copiar para embeber
-gl_error: Ha habido un problema; inténtelo de nuevo en unos momentos.
 connections: Conexiones
 nodes: Nodos
 shape: Forma
@@ -76,3 +64,20 @@ layout_with_kk: KK
 layout_with_sugiyama: Sugiyama
 i_nd_tooltip: Información que se muestra al pasar el cursor sobre un nodo. Para usar valores de la tabla de nodos use llaves, y, dentro de ellas, el nombre de la columna i.e. {nombre_columna}.
 i_cn_tooltip: Información que se muestra al pasar el cursor sobre una conexión. Para usar valores de la tabla de las conexiones use llaves, y, dentro de ellas, el nombre de la columna i.e. {nombre_columna}.
+download_viz: Descarga
+get_link: Guardar / Publicar
+gl_name: Nombre
+gl_slug: Slug
+gl_description: Descripción
+gl_source: Fuente
+gl_source_name: Título
+gl_source_path: URL
+gl_license: Licencia
+gl_tags: Etiquetas
+gl_type_tags: Presiona enter para agregar cada etiqueta
+gl_category: Categorías
+gl_no_category: Sin categoría
+gl_save: Guardar en dslibrary
+gl_iframe: Copiar para embeber
+gl_url: URL
+cannot_plot: Esta visualización no puede ser trazada con el tipo de datos que has elegido.
