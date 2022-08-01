@@ -1,3 +1,4 @@
+webshot::install_phantomjs()
 library(shinypanels)
 library(parmesan)
 library(shinyinvoer)
@@ -15,7 +16,7 @@ library(tidyverse)
 library(htmlwidgets)
 library(igraph)
 
-#webshot::install_phantomjs()
+
 
 styles <- "
 .panel {
@@ -91,7 +92,7 @@ ui <-  panelsPage(useShi18ny(),
                         color = "chardonnay",
                         body = uiOutput("controls")),
                   panel(title = ui_("viz"),
-                        title_plugin = uiOutput("download"),
+                        header_right = uiOutput("download"),
                         color = "chardonnay",
                         can_collapse = FALSE,
                         body = div(langSelectorInput("lang", position = "fixed"),
@@ -343,8 +344,9 @@ server <- function(input, output, session) {
     req(ntwrk())
   })
   
+  # Valores de URL ----------------------------------------------------------
   
-  par <- list(user_name = "test", org_name = NULL, plan = "basic")
+  par <- list(user_name = "test", comparar = FALSE, varToView = NULL, pctg = NULL)
   url_par <- reactive({
     url_params(par, session)
   })
@@ -386,7 +388,7 @@ server <- function(input, output, session) {
                      element = reactive(ntwrk()),
                      formats = c("html", "jpeg", "pdf", "png"),
                      errorMessage = i_("error_down", lang()),
-                     elementType = "dsviz",
+                     type = "dsviz",
                      user_name = user_name,
                      org_name = org_name)
   })
